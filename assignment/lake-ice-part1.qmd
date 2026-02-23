@@ -177,7 +177,7 @@ library(modelr)
 sunapee <- sunapee |>
   add_predictions(fit)|>
   add_residuals(fit)
-
+`
 head(sunapee)
 
 
