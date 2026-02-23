@@ -30,12 +30,21 @@ library(readxl)
 
 ice_data <- read_excel(file_name, sheet = "data")
 
+
+
 ```
 
 Now, look at a preview of the data using the `head()` function. The `doy` in `ice_off_doy` stands for "day of the year" and is the day within the year where ice off occurred (January 1 = doy 1).  `did_not_freeze` is a column where 1 = did not freeze and 0 = did freeze.
 
 ```{r}
 head(ice_data)
+
+ice_data <- ice_data |>
+  mutate(ice_off_doy = as.numeric(ice_off_doy))
+
+#Add this line because it would read the ice_off_doy as a character instead of numbers
+
+
 ```
 
 There should be four columns and \~2703 rows.
@@ -47,6 +56,8 @@ We will practice key skills in the module using a focal lake. Use the `filter` f
 ```{r}
 sunapee <- ice_data |>
   filter(lake_name == "Sunapee")
+
+
 ```
 
 You will be using the `sunapee` data for the rest of the module until Question 11
@@ -145,9 +156,13 @@ We will use a histogram to visually assess whether this requirement is met. Firs
 You will use a histogram to examine the residuals. First, the code uses the coefficients to predict the yearly ice-off DOY. Second, calculate the residuals by subtracting the predicted ice-off DOY from the observed DOY.
 
 ```{r}
+sunapee <- sunapee|>
+  mutate(ice_off_doy = as.numeric(ice_off_doy))
+#Add this line because it would read the ice_off_doy as a character instead of numbers
+
 sunapee <- sunapee %>% 
   mutate(predicted = fit$coefficients[1] + year * fit$coefficients[2], 
-         residual = as.numeric(ice_off_doy) - predicted) #Observed - Predicted
+         residual = ice_off_doy - predicted) #Observed - Predicted
 ```
 
 **Question 5:**
@@ -157,6 +172,14 @@ Use the [`add_predictions()`](https://modelr.tidyverse.org/reference/add_predict
 **Answer 5:**
 
 ```{r}
+library(modelr)
+
+sunapee <- sunapee |>
+  add_predictions(fit)|>
+  add_residuals(fit)
+
+head(sunapee)
+
 
 ```
 
