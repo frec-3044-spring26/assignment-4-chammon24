@@ -190,9 +190,13 @@ Now, to visualize the residuals, use `geom_histogram()` to plot them as a histog
 Show Histogram and answer the following question: do the residuals meet the assumptions of the linear regression? (are the residuals normally distributed with the distribution centered around zero)?
 
 **Answer 6:**
+The histogram shows that most of the residuals are around 0 and the graph has somewhat of a bell shape meaning that it is normally distributed. There might be a slight left skew down towards -30, but for the most part it is normally distributed. 
 
 ```{r}
-
+ggplot(sunapee, aes(x = resid)) + 
+  geom_histogram() + 
+  labs(title = "Histogram of Residuals", x = "Residuals", y = "Count") + 
+  theme_bw()
 ```
 
 
@@ -205,6 +209,7 @@ A slope could appear to be higher or lower than zero, but the uncertainty in the
 Based on the `summary()` above, what is the p-value for the slope?
 
 **Answer 7:**
+The p value is 2.5 x 10^-9 power which is much smaller than 0.05. Since the p value is smaller than 0.05, the slope is statistically relevant and shows a significant relationship between year and ice-off day of year at Lake Sunapee.
 
 ## The slope physically meaningful
 
