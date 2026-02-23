@@ -220,6 +220,7 @@ A slope value could have a low probability of being 0 (thus we have a strong bel
 Based on the slope value, how many more years are needed to pass before the lake has a 1 week change in ice off doy? Do you think this is meaningful? Why?
 
 **Answer 8:**
+Since the slope is −0.10602 days per year, it would take around 66.020 years for a week shift in ice-off timing. This is helpful due to a week shift in seasonal timing can affect ecosystems, species life cycles, and lake productivity.
 
 ## Overall model assessment
 
@@ -228,13 +229,23 @@ Based on the slope value, how many more years are needed to pass before the lake
 How comfortable are you proceeding with using this linear model for additional analysis and prediction? Why? (I am not looking for your gut answer, rather I want you to apply concepts taught in this module to justify your answer)
 
 **Answer 9:**
+I am not confident in this linear model for further analysis. The slope is significant due to the small p value, and the residuals appear roughly normal and centered around zero. However, the R squared value indicates that year explains only about 21% of the variation in ice‑off timing. While the model shows that the slope and residuals are normal, the R squared value means that the model on explains 21% of the varation which is not very significant. 
 
 **Question 10:**
 Now plot the data for Lake Sunapee (just like above - year on x-axis vs. ice of doy on y axis) but add the line from your regression results (e.g., fit intercept and slope). You will use the [`geom_abline`](https://ggplot2.tidyverse.org/reference/geom_abline.html). 
 
 **Answer 10:**
 ```{r}
-
+ggplot(sunapee, aes(x = year, y = ice_off_doy)) + 
+         geom_line() + 
+         geom_point() +
+         geom_abline(intercept = 318.94856, 
+                     slope = -0.10602, 
+                     color = "blue",
+                     linewidth = 1) +
+         labs(title = "Lake Sunapee Ice-Off DOY with Regression Line", x = "Year", 
+              y = "Ice-Off Day of Year (DOY)") +
+         theme_bw()
 ```
 
 **Question 11:**
@@ -248,7 +259,19 @@ The goal of this question is to make a forecast of the future ice-off day (with 
 
 **Answer 11:**
 
+Using the regression model, the predicted ice‑off day in 2040 is 102.7. Day 102.7 would be around mid April. A 90% confidence interval was made by adding the 5th and 95th percentile residuals to the prediction, giving an interval from 83.2 to 117. The interval width of 33.6 days shows the substantial year‑to‑year variability not captured by year alone.
+
+
 ```{r}
+lower_resid <- quantile(sunapee$resid, 0.05)
+upper_resid <- quantile(sunapee$resid, 0.95)
+
+prediction_2040 <- 318.94856 - 0.10602 * 2040
+
+lower_CI <- prediction_2040 + lower_resid
+upper_CI <- prediction_2040 + upper_resid
+
+CI_width <- upper_CI - lower_CI
 
 ```
 
@@ -261,6 +284,8 @@ To answer this question, you need to divide the Sunapee dataset into two dataset
 Use the skills developed above to evaluate the question "Is the ice-off day of year changing more quickly in more recent years at Lake Sunapee?"
 
 **Answer 12:**
+
+
 
 Use a mix of code, figures, and text to present your analysis.  If you want to compare slopes, be sure they are on the same plot.
 
