@@ -80,18 +80,21 @@ We want to model how the ice-off date changes over time. Our approach in this mo
 What do you expect the sign (plus, minus, or no change) to be for the slope of the relationship? Why?
 
 **Answer 2:**
+I expect the slope to be negative because climate change will cause the lakes to lose their ice earlier in the year than normal. Due to the lake losing their ice faster than normal, the DOY value should decrease over time which would make the slope negative. 
 
 Use the `lm` function to predict `ice_off_doy` as a function (`~`) of the year for the data.frame called `sunapee`. You can learn more about the `lm` function [here](https://www.datacamp.com/tutorial/linear-regression-R)
 
 Create an object called `fit` that contains the results of the linear model.
 
 ```{r}
+fit <- lm(data = sunapee, ice_off_doy ~ year)
 
 ```
 
 Then, use the function `summary` to explore the result of the `lm` function.
 
 ```{r}
+summary(fit)
 
 ```
 
@@ -107,8 +110,10 @@ fit$coefficients[2]
 What is the direction of the slope? How does this match your expectations from Question 2?
 
 **Answer 3:**
+The slope of the model is negative which match my expectations from earlier. This matches my expectations of the warmer temperatures making the ice melt earlier in the year.
 
 # Is our model any good?
+The R squared value is very low meaning that the model is not very good and only accounts for 21% of the variation. It shows some of the variation but not much. 
 
 ## R2
 
@@ -119,6 +124,7 @@ First, it is important to understand how much variation is explained by the mode
 What is the R2 for the regression? Based on the R2, is `year` and `ice_off_doy` strongly related?
 
 **Answer 4:**
+The R2 value is 0.2055 which is very low and explains very little variation in the data. 
 
 ## Residuals normally distributed
 
@@ -127,6 +133,7 @@ Second, it is important that the residuals from our linear model are normally di
 ```{r}
 ggplot(data = tibble(value = rnorm(1000, 0, 1))) +
   geom_histogram(aes(x = value), bins = 20)
+
 ```
 
 We will use a histogram to visually assess whether this requirement is met. First, you will need to calculate the residuals. The residuals are the difference between the ice-off DOY that your linear regression predicts and the observed DOY.
@@ -140,7 +147,7 @@ You will use a histogram to examine the residuals. First, the code uses the coef
 ```{r}
 sunapee <- sunapee %>% 
   mutate(predicted = fit$coefficients[1] + year * fit$coefficients[2], 
-         residual = ice_off_doy - predicted) #Observed - Predicted
+         residual = as.numeric(ice_off_doy) - predicted) #Observed - Predicted
 ```
 
 **Question 5:**
